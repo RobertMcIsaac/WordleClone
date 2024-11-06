@@ -101,7 +101,7 @@ fun AnswerField(
                     )
             ) {
                 Text(
-                    text = viewModel.blankArray.joinToString(" "),
+                    text = viewModel.blankArrays.joinToString(" "),
                     modifier = Modifier.padding(2.dp)
                     ,
                     fontSize = 100.sp
@@ -131,7 +131,7 @@ fun Keyboard(viewModel: WordGuessViewModel) {
 //                            .border(width = 1.dp, color = Color.Black)
                             .padding(18.dp)
                             .clickable {
-                                viewModel.addGuess(letter)
+
                                 viewModel.checkArray(letter[0])
 
                                 Log.v("thing", "${viewModel.guessList.size} hello")
