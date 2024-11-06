@@ -54,18 +54,21 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun App(viewModel: WordGuessViewModel) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize() // Make Column take the full screen size
-            .padding(16.dp), // Optional padding around the screen
-        verticalArrangement = Arrangement.SpaceBetween, // Space out children vertically
-        horizontalAlignment = Alignment.CenterHorizontally // Center items horizontally
-    ) {
-        // Place the AnswerField at the top
-        AnswerField(viewModel)
+    if(!viewModel.answerisTrue) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize() // Make Column take the full screen size
+                .padding(16.dp), // Optional padding around the screen
+            verticalArrangement = Arrangement.SpaceBetween, // Space out children vertically
+            horizontalAlignment = Alignment.CenterHorizontally // Center items horizontally
+        ) {
+            // Place the AnswerField at the top
+            AnswerField(viewModel)
 
-        // Place the Keyboard at the bottom
-        Keyboard(viewModel)
+            // Place the Keyboard at the bottom
+            Keyboard(viewModel)
+        }
+
     }
 }
 
@@ -89,29 +92,29 @@ fun AnswerField(
             )
 
         }
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Box (
-                modifier = Modifier
-                    .align(Alignment.Bottom)
-                    .padding(
-                        0.dp
-                    )
-            ) {
-                Text(
-                    text = viewModel.blankArrays.joinToString(" "),
-                    modifier = Modifier.padding(2.dp)
-                    ,
-                    fontSize = 100.sp
-                )
-            }
+                viewModel.blankArrays.forEach{array ->
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.fillMaxWidth()
+
+                    ){
+                        array.forEach{el ->
+                            Log.v( "char", "${el.char}")
+                            Text(
+                                text = el.char.value.toString(),
+                                modifier = Modifier.padding(2.dp)
+                                ,
+                                fontSize = 80.sp,
+                                color = el.color.value,
+                            )  }
+                    }
+                }
+
 
 
         }
     }
-}
+
 
 @Composable
 fun Keyboard(viewModel: WordGuessViewModel) {
@@ -129,8 +132,9 @@ fun Keyboard(viewModel: WordGuessViewModel) {
                         text = letter.uppercase(),
                         modifier = Modifier
 //                            .border(width = 1.dp, color = Color.Black)
-                            .padding(18.dp)
+                            .padding(8.dp)
                             .clickable {
+
 
                                 viewModel.checkArray(letter[0])
 
