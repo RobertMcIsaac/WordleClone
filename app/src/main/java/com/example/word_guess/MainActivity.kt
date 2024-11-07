@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.content.TransferableContent.Source.Companion.Keyboard
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,9 +23,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.InputMode.Companion.Keyboard
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.word_guess.ui.theme.Word_GuessTheme
 
 class MainActivity : ComponentActivity() {
@@ -54,7 +60,23 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun App(viewModel: WordGuessViewModel) {
-    if(!viewModel.answerisTrue) {
+    val navController = rememberNavController()
+
+    NavHost(navController = navController, startDestination = "game") {
+        // Game screen route
+        composable("game") {
+            GameScreen(viewModel = viewModel, navController = navController)
+        }
+        // Results screen route
+        composable("results") {
+            ResultScreen()
+        }
+    }
+}
+
+@Composable
+fun GameScreen(viewModel: WordGuessViewModel, navController: NavController) {
+    if(!viewModel.gameFinished) {
         Column(
             modifier = Modifier
                 .fillMaxSize() // Make Column take the full screen size
@@ -66,12 +88,32 @@ fun App(viewModel: WordGuessViewModel) {
             AnswerField(viewModel)
 
             // Place the Keyboard at the bottom
-            Keyboard(viewModel)
+            Keyboard(viewModel, navController)
         }
-
+    } else{
+        println("GAME OVER")
+        // Navigate to the results screen when the game is finished
+        navController.navigate("results") {
+            // Clear the back stack to prevent returning to the game screen
+           // popUpTo("game") { inclusive = true }
+        }
     }
 }
 
+    @Composable
+    fun ResultScreen() {
+        // Composable content for the results page
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(text = "Game Over")
+            // Add additional result information here
+        }
+    }
 
 @Composable
 fun AnswerField(
@@ -109,15 +151,12 @@ fun AnswerField(
                             )  }
                     }
                 }
-
-
-
         }
     }
 
 
 @Composable
-fun Keyboard(viewModel: WordGuessViewModel) {
+fun Keyboard(viewModel: WordGuessViewModel, navController: NavController) {
 //    var alphabet = mutableListOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x" ,"y", "z")
     Column {
         viewModel.guessList.chunked(9).forEach{ rowLetters ->
@@ -137,6 +176,10 @@ fun Keyboard(viewModel: WordGuessViewModel) {
 
 
                                 viewModel.checkArray(letter[0])
+                                if (viewModel.gameFinished){
+                                    navController.navigate("results")
+                                }
+
 
                                 Log.v("thing", "${viewModel.guessList.size} hello")
                             }
@@ -148,11 +191,11 @@ fun Keyboard(viewModel: WordGuessViewModel) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-
-    Word_GuessTheme {
-        App(WordGuessViewModel())
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//
+//    Word_GuessTheme {
+//        App(WordGuessViewModel())
+//    }
+//}

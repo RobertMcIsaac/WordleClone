@@ -53,7 +53,7 @@ class WordGuessViewModel : ViewModel() {
         private set
     var letterposition = mutableIntStateOf(0)
         private set
-    var answerisTrue: Boolean = false
+    var gameFinished: Boolean = false
         private set
     //  var blankArrays = mutableStateListOf("____", "____", "____", "____", "____", "____")
     var blankArrays = mutableStateListOf(
@@ -87,6 +87,12 @@ class WordGuessViewModel : ViewModel() {
         println(blankArrays)
     }
 
+
+
+
+    //make an alert for when we are on the last letter of the last line
+
+
     fun checkArray(letter: Char) {
 
         addLetterToArray(letter)
@@ -117,17 +123,43 @@ class WordGuessViewModel : ViewModel() {
                     // Letter is not in the target word
                     blankArrays[blankArrayPosition.intValue][index].color.value = Color.Red
                 }
+//                if (blankArrays.lastIndex == blankArrayPosition.intValue && index ==4 ){
+//                    println("GAME OVER!!!")
+//                    gameFinished = true
+//                } else {
+//
+//                }
             }
-            if(answer == targetWord){
-                // if wordlist position = wordlist.length - the answerisTrue will be true
-                // navigates to the last page which displays the final score
-                //else continue with wordslist
-                    //i.e. resets the arrays to _____ and blankarrayposition
 
-                answerisTrue = true
+            if(answer == targetWord ){
+                wordCount.intValue += 1
+                if ( wordCount.intValue == wordList.size){
+                    gameFinished = true
+                }else{
+                    blankArrays = mutableStateListOf(
+                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
+                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
+                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
+                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
+                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
+                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()))
+
+                    blankArrayPosition.intValue = 0
+
+                    letterposition.intValue = 0
+                }
+            }else {
+                if (livesCount.intValue > 1) {
+                    blankArrayPosition.intValue += 1
+                    livesCount.intValue -= 1
+
+                } else{
+                    livesCount.intValue = 0
+//                    println("blankArrayPosition.intValue ${blankArrayPosition.intValue}" )
+                    gameFinished = true
+                }
             }
-            blankArrayPosition.intValue += 1
-        }
+        } //else check for lives - if you don't get the word - lose a life (6 lives in total)
 
 //            wordList[wordCount.intValue].forEachIndexed { index, let ->
 //                if (blankArrays[blankArrayPosition.intValue][index].char.value in wordList[wordCount.intValue]){
