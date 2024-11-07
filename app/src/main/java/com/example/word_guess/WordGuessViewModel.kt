@@ -7,7 +7,12 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.word_guess.ui.theme.LetterBox
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class WordGuessViewModel : ViewModel() {
 
@@ -43,7 +48,7 @@ class WordGuessViewModel : ViewModel() {
 
     //var guessList = KeyboardOptions(keyboardType = KeyboardType.Text)
 //    private set
-    var wordList = listOf("china", "smart", "cloud", "mouse", "testy", "pinch", "stuck")
+    var wordList = listOf("china", "smart")//, "cloud", "mouse", "testy", "pinch", "stuck")
         private set
     var wordCount = mutableIntStateOf(0)
         private set
@@ -55,6 +60,8 @@ class WordGuessViewModel : ViewModel() {
         private set
     var gameFinished: Boolean = false
         private set
+    var wonGame: Boolean = false
+    private set
     //  var blankArrays = mutableStateListOf("____", "____", "____", "____", "____", "____")
     var blankArrays = mutableStateListOf(
         mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
@@ -88,7 +95,25 @@ class WordGuessViewModel : ViewModel() {
     }
 
 
-
+    fun resetGame() {
+        wordCount.intValue = 0
+        livesCount.intValue = 6
+        blankArrayPosition.intValue = 0
+        letterposition.intValue = 0
+        gameFinished = false
+        // Reset the blankArrays for a new game
+        blankArrays.clear()
+        blankArrays.addAll(
+            listOf(
+                mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
+                mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
+                mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
+                mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
+                mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
+                mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox())
+            )
+        )
+    }
 
     //make an alert for when we are on the last letter of the last line
 
@@ -123,30 +148,22 @@ class WordGuessViewModel : ViewModel() {
                     // Letter is not in the target word
                     blankArrays[blankArrayPosition.intValue][index].color.value = Color.Red
                 }
-//                if (blankArrays.lastIndex == blankArrayPosition.intValue && index ==4 ){
-//                    println("GAME OVER!!!")
-//                    gameFinished = true
-//                } else {
-//
-//                }
             }
 
             if(answer == targetWord ){
                 wordCount.intValue += 1
                 if ( wordCount.intValue == wordList.size){
+                    wonGame = true
                     gameFinished = true
                 }else{
-                    blankArrays = mutableStateListOf(
-                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
-                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
-                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
-                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
-                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()),
-                        mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()))
+                    viewModelScope.launch {
+                        delay(1000) // 1 second delay
+                        blankArrays.clear()
+                        blankArrays.addAll( listOf( mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()), mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()), mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()), mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()), mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()), mutableStateListOf(LetterBox(), LetterBox(), LetterBox(), LetterBox(), LetterBox()) ) )
+                        blankArrayPosition.intValue = 0
 
-                    blankArrayPosition.intValue = 0
-
-                    letterposition.intValue = 0
+                        letterposition.intValue = 0
+                    }
                 }
             }else {
                 if (livesCount.intValue > 1) {
