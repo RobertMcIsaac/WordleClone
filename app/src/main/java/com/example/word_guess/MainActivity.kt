@@ -142,7 +142,8 @@ fun AnswerField(
     Column {
         Row(
             horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+
         ) {
             Text(
                 text = "Lives: ${viewModel.livesCount.value}",
@@ -151,7 +152,7 @@ fun AnswerField(
                 modifier = Modifier.padding(2.dp)
             )
             Text(
-                text = "Words: ${viewModel.wordCount.value}",
+                text = "Words left: ${viewModel.wordList.size - viewModel.wordCount.intValue}",
                 fontSize = 15.sp,
                 style = androidx.compose.ui.text.TextStyle(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(2.dp)
