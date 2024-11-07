@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,11 +28,13 @@ import androidx.compose.ui.input.InputMode.Companion.Keyboard
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.word_guess.ui.theme.Word_GuessTheme
+import kotlinx.coroutines.withTimeout
 
 class MainActivity : ComponentActivity() {
     private val viewModel: WordGuessViewModel by viewModels()
@@ -69,39 +72,42 @@ fun App(viewModel: WordGuessViewModel) {
         }
         // Results screen route
         composable("results") {
-            ResultScreen()
+            ResultScreen(viewModel = viewModel, onNextScreen = { viewModel.resetGame();
+                navController.navigate("game")  })
         }
     }
 }
 
 @Composable
 fun GameScreen(viewModel: WordGuessViewModel, navController: NavController) {
-    if(!viewModel.gameFinished) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize() // Make Column take the full screen size
-                .padding(16.dp), // Optional padding around the screen
-            verticalArrangement = Arrangement.SpaceBetween, // Space out children vertically
-            horizontalAlignment = Alignment.CenterHorizontally // Center items horizontally
-        ) {
-            // Place the AnswerField at the top
-            AnswerField(viewModel)
+    // if(!viewModel.gameFinished) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize() // Make Column take the full screen size
+            .padding(16.dp), // Optional padding around the screen
+        verticalArrangement = Arrangement.SpaceBetween, // Space out children vertically
+        horizontalAlignment = Alignment.CenterHorizontally // Center items horizontally
+    ) {
+        // Place the AnswerField at the top
+        AnswerField(viewModel)
 
-            // Place the Keyboard at the bottom
-            Keyboard(viewModel, navController)
-        }
-    } else{
-        println("GAME OVER")
-        // Navigate to the results screen when the game is finished
-        navController.navigate("results") {
-            // Clear the back stack to prevent returning to the game screen
-           // popUpTo("game") { inclusive = true }
-        }
+        // Place the Keyboard at the bottom
+        Keyboard(viewModel, navController)
     }
 }
+//    } else{
+//        println("GAME OVER")
+//        // Navigate to the results screen when the game is finished
+//        navController.navigate("results") {
+//            // Clear the back stack to prevent returning to the game screen
+//           // popUpTo("game") { inclusive = true }
+//        }
+//    }
+//}
 
     @Composable
-    fun ResultScreen() {
+    fun ResultScreen(onNextScreen: () -> Unit,
+        viewModel: WordGuessViewModel) {
         // Composable content for the results page
         Column(
             modifier = Modifier
@@ -110,8 +116,21 @@ fun GameScreen(viewModel: WordGuessViewModel, navController: NavController) {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Game Over")
-            // Add additional result information here
+
+            var score = (viewModel.wordCount.intValue.toFloat() / viewModel.wordList.size.toFloat()) * 100
+
+            if(viewModel.wonGame){
+                Text(text = "You won: Your score is ${score.toInt()}%")
+            }else {
+
+                Text(text = "Game Over! Your score is ${score.toInt()}%")
+                // Add additional result information here
+            }
+
+            Button(onClick =  onNextScreen) {
+
+                Text("Play again")
+            }
         }
     }
 
@@ -174,16 +193,13 @@ fun Keyboard(viewModel: WordGuessViewModel, navController: NavController) {
                             .padding(8.dp)
                             .clickable {
 
-
                                 viewModel.checkArray(letter[0])
-                                if (viewModel.gameFinished){
+                                if (viewModel.gameFinished) {
                                     navController.navigate("results")
-                                }
-
+                                    }
 
                                 Log.v("thing", "${viewModel.guessList.size} hello")
                             }
-
                     )
                 }
             }
