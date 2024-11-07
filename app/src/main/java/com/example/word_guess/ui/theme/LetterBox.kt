@@ -4,8 +4,9 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 
-data class LetterBox(var char: MutableState<Char> = mutableStateOf('_'), // Char type for single character
-                     var color: MutableState<Color> = mutableStateOf(Color.Gray)) {
+data class LetterBox(var char: MutableState<Char> = mutableStateOf(' '), // Char type for single character
+                     var color: MutableState<Color> = mutableStateOf(Color.White),
+                     var textColor: MutableState<Color> = mutableStateOf(Color.Black)) {
 
 }
 

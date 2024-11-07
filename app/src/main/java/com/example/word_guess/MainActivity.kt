@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.content.TransferableContent.Source.Companion.Keyboard
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.InputMode.Companion.Keyboard
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,7 +44,6 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             Word_GuessTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
@@ -51,14 +53,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
 }
 
 @Composable
@@ -95,15 +89,6 @@ fun GameScreen(viewModel: WordGuessViewModel, navController: NavController) {
         Keyboard(viewModel, navController)
     }
 }
-//    } else{
-//        println("GAME OVER")
-//        // Navigate to the results screen when the game is finished
-//        navController.navigate("results") {
-//            // Clear the back stack to prevent returning to the game screen
-//           // popUpTo("game") { inclusive = true }
-//        }
-//    }
-//}
 
     @Composable
     fun ResultScreen(onNextScreen: () -> Unit,
@@ -156,17 +141,23 @@ fun AnswerField(
                 viewModel.blankArrays.forEach{array ->
                     Row(
                         horizontalArrangement = Arrangement.SpaceEvenly,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
 
                     ){
                         array.forEach{el ->
                             Log.v( "char", "${el.char}")
                             Text(
                                 text = el.char.value.toString(),
-                                modifier = Modifier.padding(2.dp)
+                                modifier = Modifier
+                                    .padding(2.dp)
+                                    .background(el.color.value)
+                                    .border(1.dp, Color.Black)
+                                    .width(70.dp)
                                 ,
                                 fontSize = 80.sp,
-                                color = el.color.value,
+                                textAlign = TextAlign.Center,
+                                color = el.textColor.value,
                             )  }
                     }
                 }
@@ -176,7 +167,6 @@ fun AnswerField(
 
 @Composable
 fun Keyboard(viewModel: WordGuessViewModel, navController: NavController) {
-//    var alphabet = mutableListOf("a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x" ,"y", "z")
     Column {
         viewModel.guessList.chunked(9).forEach{ rowLetters ->
             Row(
@@ -187,7 +177,8 @@ fun Keyboard(viewModel: WordGuessViewModel, navController: NavController) {
                 rowLetters.forEach {
                     letter ->
                     Text(
-                        text = letter.uppercase(),
+                        text = letter,
+                        fontSize = 30.sp,
                         modifier = Modifier
 //                            .border(width = 1.dp, color = Color.Black)
                             .padding(8.dp)
