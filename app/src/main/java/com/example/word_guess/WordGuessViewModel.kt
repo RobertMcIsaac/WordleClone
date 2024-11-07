@@ -16,33 +16,39 @@ import kotlinx.coroutines.launch
 
 class WordGuessViewModel : ViewModel() {
 
+//    var guessList = mutableStateListOf(
+//        "a",
+//        "b",
+//        "c",
+//        "d",
+//        "e",
+//        "f",
+//        "g",
+//        "h",
+//        "i",
+//        "j",
+//        "k",
+//        "l",
+//        "m",
+//        "n",
+//        "o",
+//        "p",
+//        "q",
+//        "r",
+//        "s",
+//        "t",
+//        "u",
+//        "v",
+//        "w",
+//        "x",
+//        "y",
+//        "z"
+//    )
+
     var guessList = mutableStateListOf(
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "u",
-        "v",
-        "w",
-        "x",
-        "y",
-        "z"
+        "q", "w", "e", "r", "t", "y", "u", "i", "o", "p",
+        "a", "s", "d", "f", "g", "h", "j", "k", "l",
+        "z", "x", "c", "v", "b", "n", "m"
     )
         private set
 
@@ -77,9 +83,6 @@ class WordGuessViewModel : ViewModel() {
         livesCount.value -= 1
     }
 
-    //    fun addGuess(guess: String) {
-//        guessList.removeIf { letter -> letter == guess}
-//    }
     fun addWordCount() {
         wordCount.value += 1
     }
@@ -123,7 +126,7 @@ class WordGuessViewModel : ViewModel() {
         addLetterToArray(letter)
 
         val checkArray: Boolean =
-            blankArrays[blankArrayPosition.intValue].all { char -> char.char.value != '_' }
+            blankArrays[blankArrayPosition.intValue].all { char -> char.char.value != ' ' }
 
         println("checkArray " + checkArray)
 
@@ -140,13 +143,16 @@ class WordGuessViewModel : ViewModel() {
                 if (currentLetter in targetWord) {
                     // Check if the letter is in the correct position
                     if (currentLetter == targetWord[index]) {
-                        blankArrays[blankArrayPosition.intValue][index].color.value = Color.Green
+                        blankArrays[blankArrayPosition.intValue][index].color.value = Color(0xFF32CD32)
+                        blankArrays[blankArrayPosition.intValue][index].textColor.value = Color.White
                     } else {
-                        blankArrays[blankArrayPosition.intValue][index].color.value = Color.Yellow
+                        blankArrays[blankArrayPosition.intValue][index].color.value = Color(0xFFFFA500)
+                        blankArrays[blankArrayPosition.intValue][index].textColor.value = Color.White
                     }
                 } else {
                     // Letter is not in the target word
-                    blankArrays[blankArrayPosition.intValue][index].color.value = Color.Red
+                    blankArrays[blankArrayPosition.intValue][index].color.value = Color(0xFFFF4500)
+                    blankArrays[blankArrayPosition.intValue][index].textColor.value = Color.White
                 }
             }
 
