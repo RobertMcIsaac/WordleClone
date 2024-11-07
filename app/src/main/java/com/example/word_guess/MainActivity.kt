@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.InputMode.Companion.Keyboard
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,6 +39,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.word_guess.ui.theme.Word_GuessTheme
 import kotlinx.coroutines.withTimeout
+import java.time.format.TextStyle
 
 class MainActivity : ComponentActivity() {
     private val viewModel: WordGuessViewModel by viewModels()
@@ -97,7 +99,7 @@ fun GameScreen(viewModel: WordGuessViewModel, navController: NavController) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -105,10 +107,24 @@ fun GameScreen(viewModel: WordGuessViewModel, navController: NavController) {
             var score = (viewModel.wordCount.intValue.toFloat() / viewModel.wordList.size.toFloat()) * 100
 
             if(viewModel.wonGame){
-                Text(text = "You won: Your score is ${score.toInt()}%")
+                Text(
+                    fontSize = 35.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(16.dp), // Adds space below this Tex,
+                    style = androidx.compose.ui.text.TextStyle(
+                        lineHeight = 35.sp
+                    ),
+                        text = "You won: \n Your score is ${score.toInt()}%")
             }else {
 
-                Text(text = "Game Over! Your score is ${score.toInt()}%")
+                Text(
+                    fontSize = 35.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.padding(16.dp), // Adds space below this Tex,
+                    style = androidx.compose.ui.text.TextStyle(
+                        lineHeight = 35.sp
+                    ),
+                    text = "Game Over!\n Your score is ${score.toInt()}%")
                 // Add additional result information here
             }
 
@@ -130,10 +146,14 @@ fun AnswerField(
         ) {
             Text(
                 text = "Lives: ${viewModel.livesCount.value}",
+                fontSize = 15.sp,
+                style = androidx.compose.ui.text.TextStyle(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(2.dp)
             )
             Text(
                 text = "Words: ${viewModel.wordCount.value}",
+                fontSize = 15.sp,
+                style = androidx.compose.ui.text.TextStyle(fontWeight = FontWeight.Bold),
                 modifier = Modifier.padding(2.dp)
             )
 
@@ -178,7 +198,7 @@ fun Keyboard(viewModel: WordGuessViewModel, navController: NavController) {
                     letter ->
                     Text(
                         text = letter,
-                        fontSize = 30.sp,
+                        fontSize = 40.sp,
                         modifier = Modifier
 //                            .border(width = 1.dp, color = Color.Black)
                             .padding(8.dp)
