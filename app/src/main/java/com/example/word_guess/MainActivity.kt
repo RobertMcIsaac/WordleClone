@@ -114,7 +114,7 @@ fun GameScreen(viewModel: WordGuessViewModel, navController: NavController) {
                     style = androidx.compose.ui.text.TextStyle(
                         lineHeight = 35.sp
                     ),
-                        text = "You won: \n Your score is ${score.toInt()}%")
+                        text = "You won: \n You scored ${score.toInt()}%")
             }else {
 
                 Text(
@@ -124,7 +124,7 @@ fun GameScreen(viewModel: WordGuessViewModel, navController: NavController) {
                     style = androidx.compose.ui.text.TextStyle(
                         lineHeight = 35.sp
                     ),
-                    text = "Game Over!\n Your score is ${score.toInt()}%")
+                    text = "Game Over!\n You scored ${score.toInt()}%")
                 // Add additional result information here
             }
 
