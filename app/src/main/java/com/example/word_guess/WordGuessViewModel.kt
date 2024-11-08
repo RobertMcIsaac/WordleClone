@@ -151,7 +151,7 @@ class WordGuessViewModel : ViewModel() {
                     }
                 } else {
                     // Letter is not in the target word
-                    blankArrays[blankArrayPosition.intValue][index].color.value = Color(0xFFFF4500)
+                    blankArrays[blankArrayPosition.intValue][index].color.value = Color(0xFFFF0000)
                     blankArrays[blankArrayPosition.intValue][index].textColor.value = Color.White
                 }
             }
@@ -179,6 +179,7 @@ class WordGuessViewModel : ViewModel() {
                 } else{
                     livesCount.intValue = 0
 //                    println("blankArrayPosition.intValue ${blankArrayPosition.intValue}" )
+                    wonGame = false
                     gameFinished = true
                 }
             }
