@@ -32,9 +32,9 @@ This was originally built as a short demonstration project (3 days) to practice 
 ## Screenshots
 Below are example screenshots showing the app’s main screen with color-coded feedback:
 
-| Early Guess | Later Guess |
-| --- | --- |
-| ![Screenshot1](https://i.ibb.co/R2kvYnN/crowd-cheat.png) | ![Screenshot2](https://i.ibb.co/99wX0YM/crowd-cheat-china.png) |
+|New Game | Early Guess | Later Guess |
+| --- | --- | --- |
+| ![Screenshot1](screenshots/wordleScreenshot1.png) | ![Screenshot2](screenshots/wordleScreenshot2.png) | ![Screenshot2](screenshots/wordleScreenshot3.png) |
 
 *(Images are representative; please use your own hosting or repository paths if you prefer.)*
 
